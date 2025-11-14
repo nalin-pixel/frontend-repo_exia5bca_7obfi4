@@ -49,15 +49,20 @@ function Navbar() {
   return (
     <div className="fixed top-0 inset-x-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/50 bg-white/70 dark:bg-neutral-900/60 border-b border-black/5 dark:border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <a href="#home" className="flex items-center gap-2 font-extrabold tracking-tight">
-          <span className="relative">
-            <span className="absolute inset-0 blur-md bg-gradient-to-r from-sky-500 to-emerald-400 rounded-full opacity-60" />
-            <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-900">
-              HT
+        <div className="flex flex-col leading-tight">
+          <a href="#home" className="flex items-center gap-2 font-extrabold tracking-tight">
+            <span className="relative">
+              <span className="absolute inset-0 blur-md bg-gradient-to-r from-sky-500 to-emerald-400 rounded-full opacity-60" />
+              <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-900">
+                HT
+              </span>
             </span>
+            <span className="text-lg">HealthTrack</span>
+          </a>
+          <span className="mt-0.5 text-[11px] sm:text-xs font-semibold italic bg-gradient-to-r from-sky-500 to-emerald-500 bg-clip-text text-transparent">
+            💙 Crafted with Love by Akshit Sharma 💚
           </span>
-          <span className="text-lg">HealthTrack</span>
-        </a>
+        </div>
         <div className="hidden md:flex items-center gap-6 text-sm font-semibold">
           <a href="#about" className="hover:text-sky-600">About</a>
           <a href="#plans" className="hover:text-sky-600">Plans</a>
@@ -426,9 +431,7 @@ function Footer() {
         <div className="mt-10 text-xs text-neutral-500 dark:text-neutral-400">
           © {new Date().getFullYear()} HealthTrack. Built for students.
         </div>
-        <div className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
-          made with Love by Akshit Sharma
-        </div>
+        {/* Removed previous 'made with Love' line as requested */}
         <div className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
           Crafted with Love by Akshit Sharma
         </div>
