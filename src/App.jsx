@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Dumbbell, Flame, Salad, Droplets, Moon, Clock, BookOpen, Download, Star, Quote, Sparkles, Leaf, Share2 } from 'lucide-react'
+import { Dumbbell, Flame, Salad, Droplets, Moon, Clock, BookOpen, Download, Star, Quote, Sparkles, Leaf, Share2, X } from 'lucide-react'
 import Spline from '@splinetool/react-spline'
 
 const container = {
@@ -34,10 +34,21 @@ function SectionTitle({ eyebrow, title, subtitle }) {
 
 function NeonButton({ children, href = '#', onClick, color = 'blue' }) {
   const base = color === 'green' ? 'from-emerald-500 to-emerald-400 shadow-emerald-500/40' : 'from-sky-500 to-sky-400 shadow-sky-500/40'
+
+  const handleClick = (e) => {
+    if (href?.startsWith('#')) {
+      e.preventDefault()
+      const id = href.slice(1)
+      const el = document.getElementById(id)
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    onClick && onClick(e)
+  }
+
   return (
     <a
       href={href}
-      onClick={onClick}
+      onClick={handleClick}
       className={`inline-flex items-center justify-center rounded-full px-6 py-3 font-bold text-white bg-gradient-to-r ${base} transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg`}
     >
       {children}
@@ -46,11 +57,21 @@ function NeonButton({ children, href = '#', onClick, color = 'blue' }) {
 }
 
 function Navbar() {
+  const navClick = (e) => {
+    const href = e.currentTarget.getAttribute('href')
+    if (href && href.startsWith('#')) {
+      e.preventDefault()
+      const id = href.slice(1)
+      const el = document.getElementById(id)
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
   return (
     <div className="fixed top-0 inset-x-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/50 bg-white/70 dark:bg-neutral-900/60 border-b border-black/5 dark:border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <div className="flex flex-col leading-tight">
-          <a href="#home" className="flex items-center gap-2 font-extrabold tracking-tight">
+          <a href="#home" onClick={navClick} className="flex items-center gap-2 font-extrabold tracking-tight">
             <span className="relative">
               <span className="absolute inset-0 blur-md bg-gradient-to-r from-sky-500 to-emerald-400 rounded-full opacity-60" />
               <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-900">
@@ -59,17 +80,15 @@ function Navbar() {
             </span>
             <span className="text-lg">HealthTrack</span>
           </a>
-          <span className="mt-0.5 text-[11px] sm:text-xs font-semibold italic text-sky-600 dark:text-emerald-400">
-            💙 Crafted with Love by Akshit Sharma 💚
-          </span>
+          {/* Header credit removed as requested */}
         </div>
         <div className="hidden md:flex items-center gap-6 text-sm font-semibold">
-          <a href="#about" className="hover:text-sky-600">About</a>
-          <a href="#plans" className="hover:text-sky-600">Plans</a>
-          <a href="#diet" className="hover:text-sky-600">Diet</a>
-          <a href="#tips" className="hover:text-sky-600">Tips</a>
-          <a href="#resources" className="hover:text-sky-600">Resources</a>
-          <a href="#testimonials" className="hover:text-sky-600">Stories</a>
+          <a href="#about" onClick={navClick} className="hover:text-sky-600">About</a>
+          <a href="#plans" onClick={navClick} className="hover:text-sky-600">Plans</a>
+          <a href="#diet" onClick={navClick} className="hover:text-sky-600">Diet</a>
+          <a href="#tips" onClick={navClick} className="hover:text-sky-600">Tips</a>
+          <a href="#resources" onClick={navClick} className="hover:text-sky-600">Resources</a>
+          <a href="#testimonials" onClick={navClick} className="hover:text-sky-600">Stories</a>
         </div>
         <div className="hidden md:block">
           <NeonButton href="#plans">Start Free Plan</NeonButton>
@@ -104,11 +123,11 @@ function Hero() {
             Get Fit. Stay Sharp.
           </h1>
           <p className="mt-4 text-lg md:text-xl text-neutral-200 max-w-xl">
-            Simple, affordable fitness built for students. Train anywhere. Eat smart on a budget. Build discipline that powers your grades and your life.
+            Simple, affordable fitness built for Indian students. Train anywhere. Eat smart on a budget. Build discipline that powers your grades and your life.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
             <NeonButton href="#plans">Start Free Plan</NeonButton>
-            <a href="#about" className="inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-colors">
+            <a href="#about" onClick={(e)=>{e.preventDefault();document.getElementById('about')?.scrollIntoView({behavior:'smooth'})}} className="inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-colors">
               Learn More
             </a>
           </div>
@@ -130,7 +149,7 @@ function About() {
         <SectionTitle
           eyebrow="What is HealthTrack"
           title="Fitness for Students — Easy, Affordable, Effective"
-          subtitle="HealthTrack is a student-focused platform with minimal-equipment workouts, budget-friendly diet guides, and simple discipline systems that fit perfectly around classes, exams, and campus life."
+          subtitle="HealthTrack is a student-focused platform with minimal-equipment workouts, budget-friendly diet guides, and simple discipline systems that fit perfectly around classes, exams, and campus life across India."
         />
         <motion.div
           variants={stagger}
@@ -140,10 +159,10 @@ function About() {
           className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           {[
-            { icon: Dumbbell, title: 'Minimal Equipment', desc: 'Train in dorms or small rooms with bodyweight or a single pair of dumbbells.' },
-            { icon: Salad, title: 'Budget Nutrition', desc: 'Cook quick, cheap, protein-rich meals that fuel your brain and body.' },
-            { icon: Clock, title: 'Time-Smart', desc: '10–20 minute sessions that fit between lectures and study blocks.' },
-            { icon: BookOpen, title: 'Discipline Systems', desc: 'Habit trackers and routines that keep you consistent even in exam weeks.' },
+            { icon: Dumbbell, title: 'Minimal Equipment', desc: 'Train in hostels or small rooms with bodyweight or a single pair of dumbbells.' },
+            { icon: Salad, title: 'Budget Nutrition', desc: 'Cook quick, pocket-friendly, protein-rich Indian meals that fuel your brain and body.' },
+            { icon: Clock, title: 'Time-Smart', desc: '10–20 minute sessions that fit between lectures and study slots.' },
+            { icon: BookOpen, title: 'Discipline Systems', desc: 'Habit trackers and routines that keep you consistent even during exam weeks.' },
           ].map((f, i) => (
             <motion.div key={i} variants={container} className="p-6 rounded-2xl border border-black/5 shadow-sm bg-white hover:shadow-lg transition-shadow">
               <f.icon className="h-6 w-6 text-sky-600" />
@@ -158,33 +177,39 @@ function About() {
 }
 
 function Plans() {
-  const plans = [
+  const plans = useMemo(() => ([
     {
       title: '10-Min Morning Reset',
-      desc: 'Wake up, energize, and prime your brain with a fast full-body flow.',
+      desc: 'Wake up, energise, and prime your mind with a fast full-body flow.',
       bullets: ['3 rounds: 30s work / 15s rest', 'Jumping jacks, bodyweight squats, plank', 'No equipment'],
     },
     {
-      title: 'Dorm/Home Workout',
+      title: 'Hostel/Home Workout',
       desc: 'Complete routine using only bodyweight or a single pair of dumbbells.',
-      bullets: ['Upper/Lower split x3 days/week', 'Push-ups, hinges, rows, split squats', 'Optional backpack load'],
+      bullets: ['Upper/Lower split × 3 days/week', 'Push-ups, hinges, rows, split squats', 'Optional backpack load'],
     },
     {
       title: 'Student Fat-Loss Circuit',
-      desc: 'Short, intense circuits to burn calories while keeping muscles.',
-      bullets: ['EMOM or Tabata templates', 'Burpees, mountain climbers, swings', '4x/week, 20 minutes'],
+      desc: 'Short, intense circuits to burn calories while keeping muscle.',
+      bullets: ['EMOM or Tabata templates', 'Burpees, mountain climbers, swings', '4×/week, 20 minutes'],
     },
     {
       title: 'Flexibility & Mobility',
-      desc: 'Feel lighter with daily 10–15m mobility and stretch protocols.',
+      desc: 'Feel lighter with daily 10–15 min mobility and stretch protocols.',
       bullets: ['Neck/shoulder, hips, ankles', 'Breathing finishers', 'Great for desk posture'],
     },
     {
       title: 'Beginner Strength Plan',
-      desc: 'Build a powerful base with safe, progressive sessions.',
+      desc: 'Build a solid base with safe, progressive sessions.',
       bullets: ['3 days/week full body', 'Goblet squats, RDLs, rows, presses', 'Linear progression'],
     },
-  ]
+  ]), [])
+
+  const [open, setOpen] = useState(false)
+  const [active, setActive] = useState(null)
+
+  const openPlan = (p) => { setActive(p); setOpen(true) }
+  const closePlan = () => { setOpen(false); setActive(null) }
 
   return (
     <section id="plans" className="bg-neutral-950 text-white py-16 md:py-24 relative overflow-hidden">
@@ -193,7 +218,7 @@ function Plans() {
         <SectionTitle
           eyebrow="Beginner Workout Plans"
           title="Start Simple. Get Results."
-          subtitle="Pick a plan that matches your schedule. Each one is short, effective, and designed for student life."
+          subtitle="Pick a plan that matches your schedule. Each one is short, effective, and designed for student life in India."
         />
         <motion.div
           variants={stagger}
@@ -215,23 +240,51 @@ function Plans() {
                 ))}
               </ul>
               <div className="mt-5">
-                <NeonButton href="#" color={i % 2 === 0 ? 'blue' : 'green'}>View Plan</NeonButton>
+                <NeonButton href="#plans" color={i % 2 === 0 ? 'blue' : 'green'} onClick={(e)=>{e.preventDefault(); openPlan(p)}}>View Plan</NeonButton>
               </div>
             </motion.div>
           ))}
         </motion.div>
       </div>
+
+      {open && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center px-4">
+          <div className="absolute inset-0 bg-black/60" onClick={closePlan} />
+          <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} className="relative w-full max-w-lg rounded-2xl bg-neutral-900 text-white border border-white/10 p-6 shadow-xl">
+            <button aria-label="Close" onClick={closePlan} className="absolute top-3 right-3 p-2 rounded-full hover:bg-white/10">
+              <X className="h-5 w-5" />
+            </button>
+            <h3 className="text-xl font-bold">{active?.title}</h3>
+            <p className="mt-2 text-white/80">{active?.desc}</p>
+            <ul className="mt-4 space-y-2 text-sm">
+              {active?.bullets?.map((b, i) => (
+                <li key={i} className="flex items-start gap-2"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-gradient-to-r from-sky-400 to-emerald-400" />{b}</li>
+              ))}
+            </ul>
+            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+              <NeonButton href="#resources" onClick={(e)=>{e.preventDefault(); document.getElementById('resources')?.scrollIntoView({behavior:'smooth'})}} color="green">Get Free PDF</NeonButton>
+              <a
+                href="#"
+                onClick={(e)=>{e.preventDefault(); alert('Pro plans launching soon for India. Stay tuned!')}}
+                className="inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-colors"
+              >
+                Upgrade (₹299/month)
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </section>
   )
 }
 
 function DietGuide() {
   const guides = [
-    { icon: Salad, title: 'Budget Student Meals', desc: 'Under $5 plates with carbs + protein + greens.' },
-    { icon: Flame, title: '1-Meal-a-Day Ideas', desc: 'High-protein, high-satiety plates for busy days.' },
-    { icon: Dumbbell, title: 'Protein-Rich Foods', desc: 'Eggs, lentils, yogurt, tuna, chicken, tofu—easy wins.' },
-    { icon: BookOpen, title: 'School Tiffin Options', desc: 'Packable wraps, overnight oats, energy bites.' },
-    { icon: Droplets, title: 'Hydration Tips', desc: '2–3L/day with electrolytes; sip during study.' },
+    { icon: Salad, title: 'Budget Student Meals', desc: 'Under ₹200 plates with carbs + protein + veggies.' },
+    { icon: Flame, title: 'One-Meal-a-Day Ideas', desc: 'High-protein, high-satiety thalis for busy days.' },
+    { icon: Dumbbell, title: 'Protein-Rich Foods', desc: 'Eggs, paneer, curd, dal, chana, rajma, tofu, chicken — easy wins.' },
+    { icon: BookOpen, title: 'Tiffin Options', desc: 'Packable rotis with paneer bhurji, poha/upma, overnight oats.' },
+    { icon: Droplets, title: 'Hydration Tips', desc: '2–3 litres/day with electrolytes; sip during study.' },
   ]
   return (
     <section id="diet" className="bg-white text-neutral-900 py-16 md:py-24">
@@ -239,7 +292,7 @@ function DietGuide() {
         <SectionTitle
           eyebrow="Diet Guide"
           title="Eat Smart on a Student Budget"
-          subtitle="Fuel your brain and body with simple, affordable meals you can prep fast."
+          subtitle="Fuel your brain and body with simple, affordable Indian meals you can prep fast."
         />
         <motion.div
           variants={stagger}
@@ -263,11 +316,11 @@ function DietGuide() {
 
 function TransformationTips() {
   const tips = [
-    { icon: Moon, title: 'Sleep Cycle Wins', desc: 'Aim for 7–9 hours. Fixed wake time. Limit screens 60m before bed.' },
-    { icon: Clock, title: 'Study x Fitness Balance', desc: 'Anchor short workouts between study blocks to refresh focus.' },
+    { icon: Moon, title: 'Sleep Cycle Wins', desc: 'Aim for 7–9 hours. Fixed wake time. Limit screens 60 min before bed.' },
+    { icon: Clock, title: 'Study × Fitness Balance', desc: 'Anchor short workouts between study blocks to refresh focus.' },
     { icon: Leaf, title: 'Consistency Habits', desc: 'Habit stack with daily cues. Track wins. Celebrate small progress.' },
     { icon: Sparkles, title: 'Morning Routines', desc: 'Hydrate, sunlight, 10-min mobility, then deep work sprint.' },
-    { icon: BookOpen, title: 'Discipline Building', desc: 'Set weekly targets, plan sessions, and show up—especially on tough days.' },
+    { icon: BookOpen, title: 'Discipline Building', desc: 'Set weekly targets, plan sessions, and show up — especially on tough days.' },
   ]
   return (
     <section id="tips" className="bg-neutral-50 text-neutral-900 py-16 md:py-24">
@@ -275,7 +328,7 @@ function TransformationTips() {
         <SectionTitle
           eyebrow="Transformation Tips"
           title="Small Habits. Big Results."
-          subtitle="Practical tactics to lock in consistency and accelerate progress without burning out."
+          subtitle="Practical tactics to lock in consistency and accelerate progress without burnout."
         />
         <motion.div
           variants={stagger}
@@ -303,6 +356,20 @@ function Resources() {
     { title: 'Budget Meal Plan (PDF)', desc: '7-day plan with shopping list.', color: 'green' },
     { title: 'Study + Fitness Guide (PDF)', desc: 'Time-blocking, routines, and focus tactics.', color: 'blue' },
   ]
+
+  const downloadPlaceholder = (title) => {
+    const content = `HealthTrack — ${title}\n\nThis is a free starter resource for Indian students. Detailed PDFs are coming soon.`
+    const blob = new Blob([content], { type: 'application/pdf' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = title.toLowerCase().replace(/\s+/g, '-') + '.pdf'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <section id="resources" className="bg-white text-neutral-900 py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -320,13 +387,13 @@ function Resources() {
               </div>
               <p className="mt-2 text-sm text-neutral-600 flex-1">{f.desc}</p>
               <div className="mt-4">
-                <NeonButton href="#" color={f.color === 'green' ? 'green' : 'blue'}>Download</NeonButton>
+                <NeonButton href="#resources" color={f.color === 'green' ? 'green' : 'blue'} onClick={(e)=>{e.preventDefault(); downloadPlaceholder(f.title)}}>Download</NeonButton>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Monetization-ready strip */}
+        {/* Monetisation-ready strip */}
         <div className="mt-10 grid md:grid-cols-3 gap-4">
           {['Ad Spot — Leaderboard','Featured Guide — Premium PDF','Ad Spot — Square'].map((label, i) => (
             <div key={i} className="rounded-xl border border-dashed border-neutral-300 p-6 text-center text-sm text-neutral-500 bg-neutral-50">
@@ -341,9 +408,9 @@ function Resources() {
 
 function Testimonials() {
   const items = [
-    { name: 'Aarav • 1st Year', text: '10-minute mornings changed my day. More energy, better focus in class.' },
-    { name: 'Maya • CS Student', text: 'Affordable meal plan helped me lose 5kg while studying for exams.' },
-    { name: 'Leo • Grad Student', text: 'Short strength sessions + sleep routine = best semester I’ve had.' },
+    { name: 'Aarav • 1st year', text: '10-minute mornings changed my day. More energy, better focus in class.' },
+    { name: 'Meera • CS student', text: 'Budget meal plan helped me lose 5 kg while studying for exams.' },
+    { name: 'Rahul • Final year', text: 'Short strength sessions + sleep routine = best semester I’ve had.' },
   ]
   return (
     <section id="testimonials" className="bg-neutral-950 text-white py-16 md:py-24 relative overflow-hidden">
@@ -401,16 +468,16 @@ function Footer() {
           <div>
             <h4 className="font-semibold">Explore</h4>
             <ul className="mt-3 space-y-2 text-sm text-neutral-600 dark:text-neutral-300">
-              <li><a href="#plans" className="hover:text-sky-600">Free Plan</a></li>
-              <li><a href="#resources" className="hover:text-sky-600">Resources</a></li>
-              <li><a href="#diet" className="hover:text-sky-600">Diet Guide</a></li>
-              <li><a href="#tips" className="hover:text-sky-600">Transformation Tips</a></li>
+              <li><a href="#plans" className="hover:text-sky-600" onClick={(e)=>{e.preventDefault();document.getElementById('plans')?.scrollIntoView({behavior:'smooth'})}}>Free Plan</a></li>
+              <li><a href="#resources" className="hover:text-sky-600" onClick={(e)=>{e.preventDefault();document.getElementById('resources')?.scrollIntoView({behavior:'smooth'})}}>Resources</a></li>
+              <li><a href="#diet" className="hover:text-sky-600" onClick={(e)=>{e.preventDefault();document.getElementById('diet')?.scrollIntoView({behavior:'smooth'})}}>Diet Guide</a></li>
+              <li><a href="#tips" className="hover:text-sky-600" onClick={(e)=>{e.preventDefault();document.getElementById('tips')?.scrollIntoView({behavior:'smooth'})}}>Transformation Tips</a></li>
             </ul>
           </div>
           <div>
             <h4 className="font-semibold">Connect</h4>
             <ul className="mt-3 space-y-2 text-sm text-neutral-600 dark:text-neutral-300">
-              <li><a href="mailto:hello@healthtrack.fit" className="hover:text-sky-600">hello@healthtrack.fit</a></li>
+              <li><a href="mailto:hello@healthtrack.in" className="hover:text-sky-600">hello@healthtrack.in</a></li>
               <li className="flex items-center gap-3">
                 <a href="#" className="hover:text-sky-600 inline-flex items-center gap-1"><Share2 className="h-4 w-4" />Instagram</a>
               </li>
@@ -418,7 +485,7 @@ function Footer() {
                 <a href="#" className="hover:text-sky-600 inline-flex items-center gap-1"><Share2 className="h-4 w-4" />YouTube</a>
               </li>
               <li className="flex items-center gap-3">
-                <a href="#" className="hover:text-sky-600 inline-flex items-center gap-1"><Share2 className="h-4 w-4" />Twitter</a>
+                <a href="#" className="hover:text-sky-600 inline-flex items-center gap-1"><Share2 className="h-4 w-4" />X</a>
               </li>
             </ul>
           </div>
@@ -429,9 +496,8 @@ function Footer() {
           </div>
         </div>
         <div className="mt-10 text-xs text-neutral-500 dark:text-neutral-400">
-          © {new Date().getFullYear()} HealthTrack. Built for students.
+          © {new Date().getFullYear()} HealthTrack. Built for students in India.
         </div>
-        {/* Removed previous 'made with Love' line as requested */}
         <div className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
           Crafted with Love by Akshit Sharma
         </div>
