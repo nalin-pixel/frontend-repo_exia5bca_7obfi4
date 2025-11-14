@@ -426,6 +426,12 @@ function Footer() {
         <div className="mt-10 text-xs text-neutral-500 dark:text-neutral-400">
           © {new Date().getFullYear()} HealthTrack. Built for students.
         </div>
+        <div className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
+          made with Love by Akshit Sharma
+        </div>
+        <div className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+          Crafted with Love by Akshit Sharma
+        </div>
       </div>
     </footer>
   )
