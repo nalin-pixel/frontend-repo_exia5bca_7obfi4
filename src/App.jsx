@@ -59,7 +59,7 @@ function Navbar() {
             </span>
             <span className="text-lg">HealthTrack</span>
           </a>
-          <span className="mt-0.5 text-[11px] sm:text-xs font-semibold italic bg-gradient-to-r from-sky-500 to-emerald-500 bg-clip-text text-transparent">
+          <span className="mt-0.5 text-[11px] sm:text-xs font-semibold italic text-sky-600 dark:text-emerald-400">
             💙 Crafted with Love by Akshit Sharma 💚
           </span>
         </div>
