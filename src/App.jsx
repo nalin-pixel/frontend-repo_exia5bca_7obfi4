@@ -499,6 +499,9 @@ function Footer() {
           © {new Date().getFullYear()} HealthTrack. Built for students in India.
         </div>
         <div className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+          Crafted with Love by Akshat Sharma ❤️
+        </div>
+        <div className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
           Crafted with Love by Akshit Sharma ❤️
         </div>
         <div className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
