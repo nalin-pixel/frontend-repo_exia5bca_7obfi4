@@ -424,6 +424,150 @@ function generateBeginnerWorkoutPDF() {
   doc.save('beginner-workout-chart.pdf')
 }
 
+// PDF generation for Budget Meal Plan (Indian)
+function generateBudgetMealPlanPDF() {
+  const doc = new jsPDF()
+  const margin = 14
+  let y = margin
+
+  const addLine = (text, opts = {}) => {
+    const { bold = false, size = 10, color = 0 } = opts
+    if (y > 280) { doc.addPage(); y = margin }
+    doc.setFont('helvetica', bold ? 'bold' : 'normal')
+    doc.setFontSize(size)
+    doc.setTextColor(color)
+    const lines = doc.splitTextToSize(text, 180)
+    lines.forEach((l) => {
+      if (y > 280) { doc.addPage(); y = margin }
+      doc.text(l, margin, y)
+      y += 6
+    })
+  }
+
+  // Title
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(18)
+  doc.text('HealthTrack — Budget Meal Plan (Indian)', margin, y)
+  y += 8
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(11)
+  doc.text('7-day student-friendly plan • High-protein • Pocket-friendly • Hostel-ready', margin, y)
+  y += 10
+
+  // Day-wise plan
+  const days = [
+    {
+      day: 'Day 1',
+      items: [
+        'Breakfast: Poha + peanuts + chai/doodh',
+        'Lunch: Dal–Chawal + salad (onion, cucumber, lemon)',
+        'Snack: Curd (dahi) + banana',
+        'Dinner: Roti + Aloo/Pea Bhaji + curd',
+      ],
+    },
+    {
+      day: 'Day 2',
+      items: [
+        'Breakfast: Upma with veggies',
+        'Lunch: Rajma–Chawal + onion salad',
+        'Snack: Sprout chaat (chana + onion + tomato + lemon + masala)',
+        'Dinner: Roti + Paneer Bhurji (or Egg Bhurji) + stir-fry veggies',
+      ],
+    },
+    {
+      day: 'Day 3',
+      items: [
+        'Breakfast: 2–3 Boiled Eggs + 2 rotis',
+        'Lunch: Chole–Chawal + cucumber raita',
+        'Snack: Groundnut (moongfali) handful + fruit',
+        'Dinner: Vegetable Khichdi + ghee (1 tsp) + achaar',
+      ],
+    },
+    {
+      day: 'Day 4',
+      items: [
+        'Breakfast: Dalia (broken wheat) with milk + nuts',
+        'Lunch: Roti + Mixed Dal + seasonal sabzi',
+        'Snack: Buttermilk (chaas) + roasted chana',
+        'Dinner: Lemon Rice (leftover rice) + egg/paneer bhurji',
+      ],
+    },
+    {
+      day: 'Day 5',
+      items: [
+        'Breakfast: Idli + Sambar (use ready batter if needed)',
+        'Lunch: Curd Rice + carrot/cucumber',
+        'Snack: Peanut chikki or ladoo (portion controlled)',
+        'Dinner: Roti + Soya/Paneer Matar + salad',
+      ],
+    },
+    {
+      day: 'Day 6',
+      items: [
+        'Breakfast: Masala Oats (oats + veggies) + boiled egg/paneer',
+        'Lunch: Egg Curry/Paneer Curry + 2 rotis',
+        'Snack: Corn (bhutta) or boiled chana + masala',
+        'Dinner: Veg Pulao + raita',
+      ],
+    },
+    {
+      day: 'Day 7',
+      items: [
+        'Breakfast: Paratha (aloo/paneer) + curd',
+        'Lunch: Moong Dal–Chawal + ghee (1 tsp)',
+        'Snack: Fruit bowl (banana + apple if budget) + peanuts',
+        'Dinner: Roti + Lauki/Beans sabzi + omelette/tofu',
+      ],
+    },
+  ]
+
+  addLine('Weekly Plan', { bold: true, size: 13 })
+  y -= 2
+  days.forEach((d) => {
+    addLine(`${d.day}`, { bold: true, size: 11 })
+    d.items.forEach((it) => addLine(`• ${it}`))
+    y += 2
+  })
+
+  // Shopping list with INR
+  addLine('Budget Shopping List (Approx. 1 week prices in INR)', { bold: true, size: 13 })
+  const shopping = [
+    'Rice 2 kg — ₹120',
+    'Wheat flour (atta) 2 kg — ₹90',
+    'Moong dal 1 kg — ₹130',
+    'Chana/Rajma 1 kg — ₹90 / ₹140',
+    'Poha 1 kg — ₹60; Suji 1 kg — ₹60',
+    'Eggs 30 pcs — ₹180 (or Paneer 500 g — ₹180)',
+    'Milk 2 L — ₹120; Curd 1 kg — ₹70',
+    'Peanuts 500 g — ₹100',
+    'Cooking oil + spices — ₹150',
+    'Onion/Potato 2 kg — ₹120; Seasonal veggies — ₹250',
+    'Fruits (bananas ×12) — ₹60; Lemons — ₹20',
+  ]
+  shopping.forEach((s) => addLine(`• ${s}`))
+  addLine('Approx total for basics: ₹1,370–₹1,650 depending on city and season.', { color: 60 })
+
+  // Tips
+  addLine('Hostel-Friendly Tips', { bold: true, size: 13 })
+  const tips = [
+    'Batch cook dal/rajma/chana; use leftovers for chaat or pulao.',
+    'Use pressure cooker/one-pot recipes to save gas/time.',
+    'Prioritise protein in every meal: eggs, curd, paneer, dals, chana.',
+    'Hydrate 2–3L/day; add nimbu + pinch of salt in summers.',
+    'Keep healthy snacks handy: roasted chana, peanuts, fruits.',
+  ]
+  tips.forEach((t) => addLine(`• ${t}`))
+
+  // Footer credits
+  if (y > 270) { doc.addPage(); y = margin }
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(9)
+  doc.setTextColor(120)
+  doc.text('Crafted with Love by Akshit Sharma — Made in India ❤️', margin, 290)
+
+  doc.save('budget-meal-plan-indian.pdf')
+}
+
 function Resources() {
   const files = [
     { key: 'beginner', title: 'Beginner Workout Chart (PDF)', desc: 'Weekly template + exercise reference.', color: 'blue' },
@@ -447,6 +591,8 @@ function Resources() {
   const handleDownload = (key, title) => {
     if (key === 'beginner') {
       generateBeginnerWorkoutPDF()
+    } else if (key === 'meal') {
+      generateBudgetMealPlanPDF()
     } else {
       downloadPlaceholder(title)
     }
