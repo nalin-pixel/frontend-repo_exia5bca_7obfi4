@@ -568,6 +568,41 @@ function generateBudgetMealPlanPDF() {
   doc.save('budget-meal-plan-indian.pdf')
 }
 
+function TransformationTips() {
+  const tips = [
+    { icon: Moon, title: 'Sleep Wins', desc: '7–9 hours nightly. Fixed wake time. Dark, cool room. No phone 30 min before bed.' },
+    { icon: Clock, title: 'Time Block', desc: 'Study sprints of 50/10. Short 10–15 min workouts between sessions for energy.' },
+    { icon: Droplets, title: 'Hydration', desc: '2–3L water daily. Add nimbu + pinch of salt in hot weather for electrolytes.' },
+    { icon: Leaf, title: 'Walk More', desc: '5–8k steps/day. Take stairs. Short walks after meals for digestion and focus.' },
+  ]
+  return (
+    <section id="tips" className="bg-white text-neutral-900 py-16 md:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionTitle
+          eyebrow="Transformation Tips"
+          title="Small Habits. Big Results."
+          subtitle="Quick wins you can apply today to feel better, study sharper, and train consistently."
+        />
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
+          {tips.map((t, i) => (
+            <motion.div key={i} variants={container} className="p-6 rounded-2xl border border-black/5 shadow-sm bg-white hover:shadow-lg transition-shadow">
+              <t.icon className="h-6 w-6 text-sky-600" />
+              <h3 className="mt-4 font-bold text-lg">{t.title}</h3>
+              <p className="mt-2 text-sm text-neutral-600">{t.desc}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
 function Resources() {
   const files = [
     { key: 'beginner', title: 'Beginner Workout Chart (PDF)', desc: 'Weekly template + exercise reference.', color: 'blue' },
