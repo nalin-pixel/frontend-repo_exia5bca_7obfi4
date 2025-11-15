@@ -90,7 +90,6 @@ function Navbar() {
             </span>
             <span className="text-lg">HealthTrack</span>
           </a>
-          {/* Header credit removed as requested */}
         </div>
         <div className="hidden md:flex items-center gap-6 text-sm font-semibold">
           <a href="#about" onClick={navClick} className="hover:text-sky-600">About</a>
@@ -578,6 +577,110 @@ function generateBudgetMealPlanPDF() {
   doc.save('budget-meal-plan-indian.pdf')
 }
 
+// PDF generation for Study + Fitness Guide
+function generateStudyFitnessGuidePDF() {
+  const doc = new jsPDF()
+  const margin = 14
+  let y = margin
+
+  const add = (text, opts = {}) => {
+    const { bold = false, size = 10, color = 0 } = opts
+    if (y > 280) { doc.addPage(); y = margin }
+    doc.setFont('helvetica', bold ? 'bold' : 'normal')
+    doc.setFontSize(size)
+    doc.setTextColor(color)
+    const lines = doc.splitTextToSize(text, 180)
+    lines.forEach((l) => {
+      if (y > 280) { doc.addPage(); y = margin }
+      doc.text(l, margin, y)
+      y += 6
+    })
+  }
+
+  // Title
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(18)
+  doc.text('HealthTrack — Study + Fitness Guide (India)', margin, y)
+  y += 8
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(11)
+  doc.text('Time-blocking • Focus tactics • Quick workouts • Exam-week protocol', margin, y)
+  y += 10
+
+  add('Why this guide?', { bold: true, size: 13 })
+  add('Small, consistent habits beat all-nighters and 2-hour gym marathons. Use this to pair short study sprints with 10–15 minute workouts so you stay energised and retain more.')
+
+  add('Daily Template (Weekdays)', { bold: true, size: 13 })
+  const weekday = [
+    '07:00 — Wake + water + sunlight (5 min)',
+    '07:10 — 10-min Morning Reset (mobility + activation)',
+    '08:00–12:00 — Classes/Study blocks (50/10 Pomodoro)',
+    '12:30 — Lunch (protein + carbs + veg)',
+    '14:00–17:00 — Study blocks (50/10) + 10-min movement every 2 blocks',
+    '18:00 — Walk 10–20 min + light snack (fruit/curd)',
+    '19:00 — 15–20 min strength circuit (hostel-friendly)',
+    '22:30 — Wind-down: no phone 30 min, dim lights, journal 3 lines',
+  ]
+  weekday.forEach((l) => add(`• ${l}`))
+
+  add('Pomodoro + Movement Pairings', { bold: true, size: 13 })
+  const pairs = [
+    'After 2 study blocks → 10 min mobility (hips/shoulders/ankles)',
+    'Low energy? → 6–8 min EMOM: 10 squats + 10 push-ups (knee) + 20s plank',
+    'Heavy day? → 12-min walk while listening to summary audio/notes',
+  ]
+  pairs.forEach((p) => add(`• ${p}`))
+
+  add('Exam Week Protocol', { bold: true, size: 13 })
+  const exam = [
+    'Sleep first: fixed wake time, target 7–8h. Caffeine before 3 PM.',
+    'Short and sharp: 2× 10–12 min circuits on alternate days; skip if too stressed.',
+    'Fuel brain: dal+chawal/curd rice/eggs+toast; hydrate with nimbu pani + pinch of salt.',
+    'Active breaks: 5–10 min walks to consolidate memory and reduce anxiety.',
+  ]
+  exam.forEach((e) => add(`• ${e}`))
+
+  add('Quick Hostel Circuit (10–15 min)', { bold: true, size: 13 })
+  const circuit = [
+    '3 rounds — 30s work / 15s rest:',
+    '• Bodyweight Squats',
+    '• Incline Push-ups (desk/bed) or Knee Push-ups',
+    '• Backpack Rows (loaded)',
+    '• Plank or Dead Bug',
+  ]
+  circuit.forEach((c) => add(c))
+
+  add('Focus Tactics', { bold: true, size: 13 })
+  const focus = [
+    'Block distractions: notifications off, put phone in another room.',
+    'Two-tab rule: only notes + reference. No endless scrolling.',
+    'Active recall + spaced repetition > rereading.',
+    'Study early after sleep; toughest subject first.',
+  ]
+  focus.forEach((f) => add(`• ${f}`))
+
+  add('Weekly Planner (Example)', { bold: true, size: 13 })
+  const week = [
+    'Mon: Lower A (goblet squat, RDL) + CS-101',
+    'Tue: Upper A (push, row) + Maths problem sets',
+    'Wed: Conditioning + Core + Lab work',
+    'Thu: Lower B + English essay',
+    'Fri: Upper B + Revise notes',
+    'Sat: Long walk with friends + light mobility',
+    'Sun: Off / Prep meals / Plan next week',
+  ]
+  week.forEach((w) => add(`• ${w}`))
+
+  // Footer
+  if (y > 270) { doc.addPage(); y = margin }
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(9)
+  doc.setTextColor(120)
+  doc.text('Crafted with Love by Akshit Sharma — Made in India ❤️', margin, 290)
+
+  doc.save('study-fitness-guide-indian.pdf')
+}
+
 function TransformationTips() {
   const tips = [
     { icon: Moon, title: 'Sleep Wins', desc: '7–9 hours nightly. Fixed wake time. Dark, cool room. No phone 30 min before bed.' },
@@ -620,26 +723,13 @@ function Resources() {
     { key: 'study', title: 'Study + Fitness Guide (PDF)', desc: 'Time-blocking, routines, and focus tactics.', color: 'blue' },
   ]
 
-  const downloadPlaceholder = (title) => {
-    const content = `HealthTrack — ${title}\n\nThis is a free starter resource for Indian students. Detailed PDFs are coming soon.`
-    const blob = new Blob([content], { type: 'application/pdf' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = title.toLowerCase().replace(/\s+/g, '-') + '.pdf'
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-  }
-
-  const handleDownload = (key, title) => {
+  const handleDownload = (key) => {
     if (key === 'beginner') {
       generateBeginnerWorkoutPDF()
     } else if (key === 'meal') {
       generateBudgetMealPlanPDF()
-    } else {
-      downloadPlaceholder(title)
+    } else if (key === 'study') {
+      generateStudyFitnessGuidePDF()
     }
   }
 
@@ -660,7 +750,7 @@ function Resources() {
               </div>
               <p className="mt-2 text-sm text-neutral-600 flex-1">{f.desc}</p>
               <div className="mt-4">
-                <NeonButton href="#resources" color={f.color === 'green' ? 'green' : 'blue'} onClick={(e)=>{e.preventDefault(); handleDownload(f.key, f.title)}}>Download</NeonButton>
+                <NeonButton href="#resources" color={f.color === 'green' ? 'green' : 'blue'} onClick={(e)=>{e.preventDefault(); handleDownload(f.key)}}>Download</NeonButton>
               </div>
             </div>
           ))}
