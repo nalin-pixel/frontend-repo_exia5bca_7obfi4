@@ -13,19 +13,28 @@ const stagger = {
   show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
 }
 
-function SectionTitle({ eyebrow, title, subtitle }) {
+function SectionTitle({ eyebrow, title, subtitle, onDark = false }) {
+  const eyebrowClass = onDark
+    ? 'inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-widest bg-white/10 text-white border border-white/10'
+    : 'inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-widest bg-neutral-100 text-neutral-800'
+  const titleClass = onDark
+    ? 'mt-4 text-3xl md:text-4xl font-extrabold tracking-tight text-white'
+    : 'mt-4 text-3xl md:text-4xl font-extrabold tracking-tight text-neutral-900'
+  const subtitleClass = onDark
+    ? 'mt-4 text-white/80 leading-relaxed'
+    : 'mt-4 text-neutral-600 leading-relaxed'
   return (
     <div className="max-w-3xl mx-auto text-center mb-10">
       {eyebrow && (
-        <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-widest bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-100">
+        <span className={eyebrowClass}>
           {eyebrow}
         </span>
       )}
-      <h2 className="mt-4 text-3xl md:text-4xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
+      <h2 className={titleClass}>
         {title}
       </h2>
       {subtitle && (
-        <p className="mt-4 text-neutral-600 dark:text-neutral-300 leading-relaxed">
+        <p className={subtitleClass}>
           {subtitle}
         </p>
       )}
@@ -220,6 +229,7 @@ function Plans() {
           eyebrow="Beginner Workout Plans"
           title="Start Simple. Get Results."
           subtitle="Pick a plan that matches your schedule. Each one is short, effective, and designed for student life in India."
+          onDark
         />
         <motion.div
           variants={stagger}
@@ -553,7 +563,7 @@ function generateBudgetMealPlanPDF() {
     'Batch cook dal/rajma/chana; use leftovers for chaat or pulao.',
     'Use pressure cooker/one-pot recipes to save gas/time.',
     'Prioritise protein in every meal: eggs, curd, paneer, dals, chana.',
-    'Hydrate 2–3L/day; add nimbu + pinch of salt in summers.',
+    'Hydrate 2–3L/day; add nimbu + pinch of salt in hot weather for electrolytes.',
     'Keep healthy snacks handy: roasted chana, peanuts, fruits.',
   ]
   tips.forEach((t) => addLine(`• ${t}`))
@@ -683,6 +693,7 @@ function Testimonials() {
           eyebrow="Student Stories"
           title="Real Results. Real Students."
           subtitle="Your path can be this simple too. Start with one small habit today."
+          onDark
         />
         <div className="grid md:grid-cols-3 gap-6">
           {items.map((t, i) => (
