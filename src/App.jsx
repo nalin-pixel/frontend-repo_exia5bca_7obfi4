@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Dumbbell, Flame, Salad, Droplets, Moon, Clock, BookOpen, Download, Star, Quote, Sparkles, Leaf, Share2, X } from 'lucide-react'
 import Spline from '@splinetool/react-spline'
+import jsPDF from 'jspdf'
 
 const container = {
   hidden: { opacity: 0, y: 24 },
@@ -314,47 +315,120 @@ function DietGuide() {
   )
 }
 
-function TransformationTips() {
-  const tips = [
-    { icon: Moon, title: 'Sleep Cycle Wins', desc: 'Aim for 7–9 hours. Fixed wake time. Limit screens 60 min before bed.' },
-    { icon: Clock, title: 'Study × Fitness Balance', desc: 'Anchor short workouts between study blocks to refresh focus.' },
-    { icon: Leaf, title: 'Consistency Habits', desc: 'Habit stack with daily cues. Track wins. Celebrate small progress.' },
-    { icon: Sparkles, title: 'Morning Routines', desc: 'Hydrate, sunlight, 10-min mobility, then deep work sprint.' },
-    { icon: BookOpen, title: 'Discipline Building', desc: 'Set weekly targets, plan sessions, and show up — especially on tough days.' },
+// PDF generation for Beginner Workout Chart
+function generateBeginnerWorkoutPDF() {
+  const doc = new jsPDF()
+  const margin = 14
+  let y = margin
+
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(18)
+  doc.text('HealthTrack — Beginner Workout Chart', margin, y)
+  y += 8
+
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(11)
+  doc.text('3-Day Full Body • Minimal Equipment • Student-Friendly (India)', margin, y)
+  y += 10
+
+  // Legend
+  doc.setFontSize(10)
+  doc.text('Legend: RPE = effort (1–10), EMOM = Every Minute On the Minute', margin, y)
+  y += 6
+
+  const sections = [
+    {
+      title: 'Warm-up (Daily • 5–7 min)',
+      items: [
+        '30s Jumping Jacks',
+        '30s Inchworm Walkouts',
+        '10 Bodyweight Squats',
+        '20–30s Plank + 5 Deep Breaths',
+      ],
+    },
+    {
+      title: 'Day 1 — Full Body (A)',
+      items: [
+        'Goblet Squat — 3×8–10 @ RPE 7',
+        'Push-ups (Knee if needed) — 3×6–10',
+        'DB/Backpack Row — 3×10–12',
+        'Hip Hinge (RDL) — 3×10',
+        'Finisher: 4 min EMOM — 10 Mountain Climbers/side',
+      ],
+    },
+    {
+      title: 'Day 2 — Conditioning + Core',
+      items: [
+        'Circuit × 4 rounds (30s work / 15s rest):',
+        '• High Knees • Bodyweight Squats • Plank Shoulder Taps • Glute Bridge',
+        'Walk 5–10 min easy pace',
+      ],
+    },
+    {
+      title: 'Day 3 — Full Body (B)',
+      items: [
+        'Split Squat — 3×8/leg',
+        'DB Overhead Press — 3×8–10',
+        'DB Single-arm Row — 3×10/arm',
+        'Romanian Deadlift — 3×10',
+        'Finisher: 5 min — 20s Fast March • 10s Rest',
+      ],
+    },
+    {
+      title: 'Cool-down (3–5 min)',
+      items: [
+        'Deep Breathing 5×',
+        'Hamstring + Hip Flexor Stretch',
+        'Chest + Upper Back Stretch',
+      ],
+    },
+    {
+      title: 'Tips for Students in India',
+      items: [
+        'Keep one pair of adjustable DBs or a loaded backpack.',
+        'Protein ideas: eggs, curd, paneer, dal, chana, rajma.',
+        'Hydrate 2–3L/day; add a pinch of salt + lemon in summers.',
+        'Sleep 7–9h; fixed wake time. Consistency > perfection.',
+      ],
+    },
   ]
-  return (
-    <section id="tips" className="bg-neutral-50 text-neutral-900 py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionTitle
-          eyebrow="Transformation Tips"
-          title="Small Habits. Big Results."
-          subtitle="Practical tactics to lock in consistency and accelerate progress without burnout."
-        />
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {tips.map((t, i) => (
-            <motion.div key={i} variants={container} className="p-6 rounded-2xl border border-black/5 bg-white shadow-sm hover:shadow-lg transition-shadow">
-              <t.icon className="h-6 w-6 text-sky-600" />
-              <h3 className="mt-4 font-bold text-lg">{t.title}</h3>
-              <p className="mt-2 text-sm text-neutral-600">{t.desc}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  )
+
+  sections.forEach((sec) => {
+    y += 6
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(12)
+    doc.text(sec.title, margin, y)
+    y += 4
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(10)
+
+    sec.items.forEach((line) => {
+      const lines = doc.splitTextToSize(line, 180)
+      lines.forEach((l) => {
+        if (y > 280) {
+          doc.addPage()
+          y = margin
+        }
+        doc.text(`• ${l}`, margin, y)
+        y += 6
+      })
+    })
+  })
+
+  // Footer
+  if (y > 270) { doc.addPage(); y = margin }
+  doc.setFontSize(9)
+  doc.setTextColor(120)
+  doc.text('Crafted with Love by Akshit Sharma — Made in India ❤️', margin, 290)
+
+  doc.save('beginner-workout-chart.pdf')
 }
 
 function Resources() {
   const files = [
-    { title: 'Beginner Workout Chart (PDF)', desc: 'Weekly template + exercise reference.', color: 'blue' },
-    { title: 'Budget Meal Plan (PDF)', desc: '7-day plan with shopping list.', color: 'green' },
-    { title: 'Study + Fitness Guide (PDF)', desc: 'Time-blocking, routines, and focus tactics.', color: 'blue' },
+    { key: 'beginner', title: 'Beginner Workout Chart (PDF)', desc: 'Weekly template + exercise reference.', color: 'blue' },
+    { key: 'meal', title: 'Budget Meal Plan (PDF)', desc: '7-day plan with shopping list.', color: 'green' },
+    { key: 'study', title: 'Study + Fitness Guide (PDF)', desc: 'Time-blocking, routines, and focus tactics.', color: 'blue' },
   ]
 
   const downloadPlaceholder = (title) => {
@@ -368,6 +442,14 @@ function Resources() {
     a.click()
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
+  }
+
+  const handleDownload = (key, title) => {
+    if (key === 'beginner') {
+      generateBeginnerWorkoutPDF()
+    } else {
+      downloadPlaceholder(title)
+    }
   }
 
   return (
@@ -387,7 +469,7 @@ function Resources() {
               </div>
               <p className="mt-2 text-sm text-neutral-600 flex-1">{f.desc}</p>
               <div className="mt-4">
-                <NeonButton href="#resources" color={f.color === 'green' ? 'green' : 'blue'} onClick={(e)=>{e.preventDefault(); downloadPlaceholder(f.title)}}>Download</NeonButton>
+                <NeonButton href="#resources" color={f.color === 'green' ? 'green' : 'blue'} onClick={(e)=>{e.preventDefault(); handleDownload(f.key, f.title)}}>Download</NeonButton>
               </div>
             </div>
           ))}
