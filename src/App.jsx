@@ -205,7 +205,8 @@ function Plans() {
     {
       title: 'Flexibility & Mobility',
       desc: 'Feel lighter with daily 10–15 min mobility and stretch protocols.',
-      bullets: ['Neck/shoulder, hips, ankles', 'Breathing finishers', 'Great for desk posture'],
+      bullets: ['Neck/shoulder, hips, ankles',
+      'Breathing finishers', 'Great for desk posture'],
     },
     {
       title: 'Beginner Strength Plan',
@@ -846,7 +847,7 @@ function Footer() {
                 <a href="#" className="hover:text-sky-600 inline-flex items-center gap-1"><Share2 className="h-4 w-4" />Instagram</a>
               </li>
               <li className="flex items-center gap-3">
-                <a href="#" className="hover:text-sky-600 inline-flex items-center gap-1"><Share2 className="h-4 w-4" />YouTube</a>
+                <a href="https://youtube.com/@healthtrack-og?si=LaEZ8MeZIRIyCMA3" target="_blank" rel="noopener noreferrer" className="hover:text-sky-600 inline-flex items-center gap-1"><Share2 className="h-4 w-4" />YouTube</a>
               </li>
               <li className="flex items-center gap-3">
                 <a href="#" className="hover:text-sky-600 inline-flex items-center gap-1"><Share2 className="h-4 w-4" />X</a>
